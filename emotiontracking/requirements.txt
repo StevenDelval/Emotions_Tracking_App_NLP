@@ -13,3 +13,4 @@ asgiref
 pytz
 sqlparse
 gunicorn==20.0.4
+pycodestyle
