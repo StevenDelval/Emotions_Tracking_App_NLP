@@ -1,0 +1,49 @@
+# name of our workflow
+name: Django CI/CD Workflow
+
+# triggers for our workflow
+on:
+  # opening a pull request to master and develop branch will be a trigger
+  pull_request:
+    branches:
+      - develop
+      - main
+    paths:
+      - 'emotiontracking/**'
+  # any code pushed to master and develop branch will also be a trigger
+  push:
+    branches:
+      - develop
+      - main
+    paths:
+      - 'emotiontracking/**' 
+
+#  jobs definition
+jobs:
+  health-check-job: # health check job for testing and code formatting check
+    runs-on: ubuntu-latest # os for running the job
+    steps:
+      - name: Checkout code # checking our the code at current commit that triggers the workflow
+        uses: actions/checkout@v2
+      - name: Cache dependency # caching dependency will make our build faster.
+        uses: actions/cache@v2 # for more info checkout pip section documentation at https://github.com/actions/cache
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      - name: Setup python environment # setting python environment to 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9' # if you want multiple python version run just use matrix strategy in job config. See the documentation of GitHub Actions
+      - name: Check Python version # checking the python version to see if 3.x is installed.
+        run: python --version
+      - name: Install requirements # install application requirements
+        run: pip install -r emotiontracking/requirements.txt
+      - name: Check Syntax # check code formatting
+        run: pycodestyle --statistics emotiontracking
+      - name: Run Migrations # run migrations to create table in side car db container
+        run: python real_estate_app/manage.py migrate
+      - name: Run Test and COverage # running tests
+        working-directory: ./emotiontracking
+        run: pytest --cov-fail-under=95 -vv
