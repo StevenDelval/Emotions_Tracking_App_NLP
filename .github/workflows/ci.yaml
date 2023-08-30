@@ -42,8 +42,8 @@ jobs:
         run: pip install -r emotiontracking/requirements.txt
       # - name: Check Syntax # check code formatting
       #   run: pycodestyle --statistics emotiontracking
-      - name: Run Migrations # run migrations to create table in side car db container
-        run: python emotiontracking/manage.py migrate 
+      # - name: Run Migrations # run migrations to create table in side car db container
+      #   run: python emotiontracking/manage.py migrate 
       - name: Run Test and COverage # running tests
         working-directory: ./emotiontracking
         run: pytest --cov-fail-under=95 -vv
