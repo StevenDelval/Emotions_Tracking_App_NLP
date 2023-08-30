@@ -14,3 +14,4 @@ pytz
 sqlparse
 gunicorn==20.0.4
 pycodestyle
+pytest-cov==4.1.0
