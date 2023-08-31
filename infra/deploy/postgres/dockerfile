@@ -1,0 +1,12 @@
+FROM postgres:latest
+
+# Var env configuration de PostgreSQL
+ENV POSTGRES_DB emotion_db
+ENV POSTGRES_USER main_user
+ENV POSTGRES_PASSWORD pwd
+
+
+# Changer var port d'écoute
+ENV POSTGRES_PORT 8080
+EXPOSE 8080
+
